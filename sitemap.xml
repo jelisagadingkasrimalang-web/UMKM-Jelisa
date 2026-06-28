@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SITEMAP.XML — JELISA
+  Website : https://jelisa.netlify.app/
+  Dibuat  : 2026-06-27
+
+  CARA PAKAI:
+  1. Upload file ini ke root folder website (sejajar dengan index.html),
+     sehingga bisa diakses di: https://jelisa.netlify.app/sitemap.xml
+  2. Submit di Google Search Console:
+     Indexing -> Sitemaps -> Tambahkan sitemap baru -> isi "sitemap.xml" -> Submit
+
+  CATATAN:
+  - URL di bawah memakai nama file HTML asli (index.html, katalog.html,
+    tentang.html, kontak.html) karena ini static site tanpa URL rewriting.
+  - Halaman /blog belum dibuat, jadi belum dimasukkan. Tambahkan entri baru
+    di bawah ini kapan pun halaman blog sudah online.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- BERANDA -->
+  <url>
+    <loc>https://jelisa.netlify.app/</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- PRODUK / KATALOG -->
+  <url>
+    <loc>https://jelisa.netlify.app/katalog.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- TENTANG KAMI -->
+  <url>
+    <loc>https://jelisa.netlify.app/tentang.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- KONTAK -->
+  <url>
+    <loc>https://jelisa.netlify.app/kontak.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
