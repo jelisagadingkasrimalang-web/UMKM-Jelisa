@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produk & Katalog | JELISA</title>
+<meta name="description" content="Katalog produk dan layanan JELISA: sabun cuci dari minyak jelantah daur ulang, dibuat oleh komunitas Kelurahan Gading Kasri, Kota Malang.">
+
+<link rel="icon" type="image/png" href="images/logo/favicon-32.png">
+<link rel="apple-touch-icon" href="images/logo/favicon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/jelisa-design-system.css">
+<link rel="stylesheet" href="css/site-layout.css">
+</head>
+<body>
+<nav class="jelisa-nav" id="mainNav" role="banner">
+  <div class="container">
+    <div class="jelisa-nav__inner">
+
+      <a href="index.html" class="jelisa-nav__logo" aria-label="JELISA, Beranda">
+        <img src="images/logo/jelisa-icon-nav.png" alt="" class="jelisa-nav__logo-icon">
+        <span class="jelisa-nav__logo-name">JELISA</span>
+      </a>
+
+      <ul class="jelisa-nav__links" role="list">
+        <li><a href="index.html" class="jelisa-nav__link">Beranda</a></li>
+        <li><a href="katalog.html" class="jelisa-nav__link" aria-current="page">Produk</a></li>
+        <li><a href="tentang.html" class="jelisa-nav__link">Tentang Kami</a></li>
+        <li><a href="kontak.html" class="jelisa-nav__link">Kontak</a></li>
+      </ul>
+
+      <div class="jelisa-nav__actions">
+        <a href="kontak.html" class="btn btn-primary btn-sm jelisa-nav__cta">Setor Jelantah</a>
+        <button class="jelisa-nav__hamburger" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Buka menu">
+          <span class="jelisa-nav__hamburger-line"></span>
+          <span class="jelisa-nav__hamburger-line"></span>
+          <span class="jelisa-nav__hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="jelisa-nav__mobile-menu" id="mobileMenu" role="navigation" aria-label="Menu mobile">
+  <ul class="jelisa-nav__mobile-links" role="list">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="katalog.html">Produk</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+    <li><a href="kontak.html">Kontak</a></li>
+  </ul>
+  <div class="jelisa-nav__mobile-cta">
+    <a href="kontak.html" class="btn btn-primary btn-block btn-pill">Setor Jelantah</a>
+  </div>
+</div>
+
+<main class="site-main">
+
+  <header class="page-header">
+    <div class="container">
+      <p class="page-header__eyebrow">Produk & Layanan</p>
+      <h1 class="page-header__title">Produk &amp; Katalog JELISA</h1>
+      <p class="page-header__desc">Hasil olahan minyak jelantah daur ulang dari komunitas RT. 011 RW. 003, dibuat dan difoto langsung oleh anggota komunitas.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- Filter kategori: hanya muncul otomatis lewat JS jika produk > 8 -->
+      <div class="filter-bar" id="filterBar" hidden></div>
+
+      <div class="cards-grid cards-grid--3" id="productGrid"></div>
+
+      <p id="emptyState" class="section__desc" style="text-align:center;margin-inline:auto;display:none">
+        Tidak ada produk pada kategori ini.
+      </p>
+    </div>
+  </section>
+
+  <script>
+  // ============================================================
+  // DATA PRODUK
+  // Tambah produk baru = tambah satu objek di array ini.
+  // Tidak perlu menulis HTML kartu secara manual.
+  // ============================================================
+  const PRODUCTS = [
+    {
+      id: "sabun-jelisa-batang-cuci",
+      name: "Sabun Jelisa Batang Cuci",
+      category: "sabun-cuci",
+      categoryLabel: "Sabun Cuci",
+      priceLabel: "Harga",
+      price: "Rp 2.500 / 50 gram",
+      desc: "Sabun Jelisa Batang Cuci merupakan produk sabun cuci baju berkualitas yang dibuat dari bahan utama minyak jelantah hasil daur ulang. Diproduksi secara teliti oleh pengurus dan anggota komunitas JELISA, sabun ini mengandung bahan-bahan yang efektif membersihkan noda pakaian sekaligus ramah lingkungan.",
+      badge: "terlaris",
+      images: ["images/produk/Foto_5.jpeg", "images/produk/Foto_4.jpeg"],
+      buyLink: "https://tk.tokopedia.com/ZSCj5KEAo/",
+      waNumber: "62881026130704", // dari 0881026130704
+    },
+  ];
+
+  const BADGE_LABELS = { terlaris: "Terlaris", baru: "Baru" };
+  const BADGE_CLASS  = { terlaris: "card-product__badge--bestseller", baru: "card-product__badge--new" };
+
+  function buildCard(p) {
+    const badge = p.badge
+      ? `<span class="card-product__badge ${BADGE_CLASS[p.badge] || ""}">${BADGE_LABELS[p.badge] || p.badge}</span>`
+      : "";
+
+    const dots = p.images.length > 1
+      ? `<div class="card-product__gallery-dots">` +
+        p.images.map((_, i) => `<button class="gallery-dot${i === 0 ? " is-active" : ""}" data-idx="${i}" aria-label="Foto ${i + 1}"></button>`).join("") +
+        `</div>`
+      : "";
+
+    const waBtn = p.waNumber
+      ? `<a href="https://wa.me/${p.waNumber}?text=${encodeURIComponent("Halo, saya ingin menanyakan produk " + p.name)}" target="_blank" rel="noopener" class="btn btn-accent-outline btn-sm">Tanya WA</a>`
+      : `<button class="btn btn-accent-outline btn-sm" disabled title="Nomor WhatsApp JELISA belum diisi pada data produk">Tanya WA</button>`;
+
+    return `
+      <div class="card-product" data-category="${p.category}">
+        <div class="card-product__image-wrap">
+          <img class="card-product__image" data-id="${p.id}" src="${p.images[0]}" alt="${p.name}" loading="lazy">
+          ${badge}
+          ${dots}
+        </div>
+        <div class="card-product__body">
+          <p class="card-product__category">${p.categoryLabel}</p>
+          <h3 class="card-product__name">${p.name}</h3>
+          <p class="card-product__desc">${p.desc}</p>
+          <div class="card-product__divider"></div>
+          <div class="card-product__footer card-product__footer--stack">
+            <div class="card-product__price">
+              <span class="card-product__rating-count" style="font-size:.65rem">${p.priceLabel}</span>
+              <span class="card-product__price-current">${p.price}</span>
+            </div>
+            <div class="card-product__actions">
+              <a href="${p.buyLink}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Beli di Tokopedia</a>
+              ${waBtn}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function render(filterCategory) {
+    const grid = document.getElementById("productGrid");
+    const list = filterCategory && filterCategory !== "semua"
+      ? PRODUCTS.filter(p => p.category === filterCategory)
+      : PRODUCTS;
+    grid.innerHTML = list.map(buildCard).join("");
+    document.getElementById("emptyState").style.display = list.length ? "none" : "block";
+
+    // Gallery dot listeners (re-bind setiap render karena innerHTML diganti)
+    grid.querySelectorAll(".card-product").forEach(card => {
+      const product = PRODUCTS.find(p => p.id === card.querySelector("img").dataset.id);
+      card.querySelectorAll(".gallery-dot").forEach(dot => {
+        dot.addEventListener("click", () => {
+          const idx = Number(dot.dataset.idx);
+          card.querySelector("img").src = product.images[idx];
+          card.querySelectorAll(".gallery-dot").forEach((d, i) => d.classList.toggle("is-active", i === idx));
+        });
+      });
+    });
+  }
+
+  // Filter kategori hanya muncul jika produk > 8 (sesuai ketentuan)
+  const categories = [...new Map(PRODUCTS.map(p => [p.category, p.categoryLabel])).entries()];
+  if (PRODUCTS.length > 8 && categories.length > 1) {
+    const bar = document.getElementById("filterBar");
+    bar.hidden = false;
+    const pills = [["semua", "Semua"], ...categories];
+    bar.innerHTML = pills.map(([val, label], i) =>
+      `<button class="filter-pill${i === 0 ? " is-active" : ""}" data-cat="${val}">${label}</button>`
+    ).join("");
+    bar.querySelectorAll(".filter-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        bar.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("is-active"));
+        pill.classList.add("is-active");
+        render(pill.dataset.cat);
+      });
+    });
+  }
+
+  render();
+  </script>
+
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div class="site-footer__brand">
+        <p class="site-footer__logo">JELISA</p>
+        <p>Usaha mikro komunitas pengolahan minyak jelantah, mengubah limbah rumah tangga menjadi sabun cuci dan lilin aromatik yang bermanfaat bagi lingkungan.</p>
+        <!-- Placeholder akun media sosial: ganti href="#" dengan tautan resmi JELISA -->
+        <div class="site-footer__social">
+          <a href="#" aria-label="Instagram JELISA">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook JELISA">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" aria-label="WhatsApp JELISA">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <p class="site-footer__heading">Navigasi</p>
+        <nav class="site-footer__links">
+          <a href="index.html">Beranda</a>
+          <a href="katalog.html">Produk / Katalog</a>
+          <a href="tentang.html">Tentang Kami</a>
+          <a href="kontak.html">Hubungi Kami</a>
+        </nav>
+      </div>
+
+      <div>
+        <p class="site-footer__heading">Kontak</p>
+        <p class="site-footer__address">
+          Jl. Jombang III No. 221, RT. 011 RW. 003,<br>
+          Kel. Gading Kasri, Kec. Klojen,<br>
+          Kota Malang, Jawa Timur
+        </p>
+      </div>
+
+      <div>
+        <p class="site-footer__heading">Legalitas</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="badge badge-primary">NIB 1293000632249</span>
+          <span class="badge badge-secondary">IUMK · 24 Jun 2021</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 JELISA (Jelantah Sisa). Usaha Mikro Komunitas Peduli Lingkungan.</span>
+      <span>NIB · Izin Usaha Mikro Kecil (IUMK)</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/site-nav.js"></script>
+<script src="js/site-whatsapp.js"></script>
+</body>
+</html>
